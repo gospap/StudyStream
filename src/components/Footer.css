@@ -1,0 +1,27 @@
+.footer {
+  padding: 1rem;
+  flex-shrink: 0;
+  background: #2d2d2d;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 25px;
+}
+
+.comp2 {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}
+
+@media only screen and (max-width: 765px) {
+  .footer {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .comp2 {
+    font-size: 1rem;
+  }
+}

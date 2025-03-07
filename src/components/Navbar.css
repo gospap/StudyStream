@@ -1,0 +1,28 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #282828;
+  color: white;
+  padding: 0 1rem;
+}
+
+.navbar a {
+  margin-right: 0.5rem;
+  color: white;
+}
+
+.pages {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+
+.pages a {
+  text-decoration: none;
+}
+
+.pages a:hover {
+  color: rgb(161, 45, 255);
+  transition: all ease 0.25s;
+}
