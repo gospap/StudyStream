@@ -5,7 +5,7 @@ import "./Navbar.css";
 function Navbar() {
   return (
     <nav className="navbar">
-      <h1>Video Learning App</h1>
+      <h1>StudyStream</h1>
       <div className="pages">
         <Link to="/">Home</Link>
         <Link to="/courses">Courses</Link>

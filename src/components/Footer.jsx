@@ -6,7 +6,6 @@ const Footer = () => {
       <p>&copy; Copyright 2025</p>
       <div className="comp2">
         <div>Privacy Policy</div>
-        <div>Terms of Use</div>
       </div>
     </div>
   );

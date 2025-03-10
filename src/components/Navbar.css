@@ -1,15 +1,14 @@
 .navbar {
   display: flex;
   justify-content: space-between;
+  width: 90%;
+  padding: 20px;
   align-items: center;
-  background: #282828;
-  color: white;
-  padding: 0 1rem;
 }
-
 .navbar a {
   margin-right: 0.5rem;
   color: white;
+  font-size: 1.2rem;
 }
 
 .pages {
@@ -23,6 +22,6 @@
 }
 
 .pages a:hover {
-  color: rgb(161, 45, 255);
+  color: rgb(115, 9, 202);
   transition: all ease 0.25s;
 }

@@ -1,4 +1,3 @@
-// src/pages/Auth.jsx
 import { useState } from "react";
 import axios from "axios";
 import "./Auth.css";
@@ -8,7 +7,8 @@ function Auth() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("https://api.example.com/login", {
+      const response = await axios.post("", {
+        // link tou api tjs sxolhs apo to apps
         email,
         password,
       });

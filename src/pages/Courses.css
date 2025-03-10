@@ -1,0 +1,29 @@
+.courses-main {
+  width: 100%;
+  background-color: #b0abab;
+  height: 70vh;
+  opacity: 70%;
+  display: flex;
+  flex-direction: row;
+}
+.filter-box {
+  width: 20%;
+  height: 90%;
+  background-color: #4c4a4a;
+  opacity: 70%;
+  position: relative;
+  left: 2rem;
+  top: 2rem;
+}
+.courses-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap; /* Ensures cards wrap if there's not enough space */
+}
+.filter-box h1 {
+  color: white;
+}
+h2 {
+  text-align: center;
+  color: #ab58f4;
+}
