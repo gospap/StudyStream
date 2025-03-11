@@ -1,6 +1,5 @@
 import "./Courses.css";
 import Card from "../components/Card";
-import image1 from "../assets/top-rated.jpg";
 
 const coursesData = [
   {

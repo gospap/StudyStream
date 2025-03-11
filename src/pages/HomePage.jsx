@@ -51,7 +51,7 @@ const HomePage = () => {
           <Card
             image={image2}
             title="Get Started"
-            description="What are you waiting for? Log in and start throbbing!"
+            description="What are you waiting for? Log in and stand out!"
             link="/Auth"
           />
           <Card
