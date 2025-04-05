@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="home.css" />
+    <link rel="stylesheet" href="app.css" />
+  </head>
+  <body>
+    <nav className="navbar">
+      <h1>StudyStream</h1>
+      <div className="pages">
+        <button class="navbtn" onclick="navigate('home.html')">Home</button>
+        <button class="navbtn" onclick="navigate('courses.html')">
+          Courses
+        </button>
+        <button class="navbtn" onclick="navigate('meetings.html')">
+          Meetings
+        </button>
+        <button id="logout" class="navbtn">Logout</button>
+      </div>
+    </nav>
+
+    <div class="homepage">
+      <div class="mainpurp">
+        <div class="hero">
+          <h1>Study smarter, not harder - Your All-in-One Exam Prep Hub!</h1>
+          <p>
+            Access <i>notes</i>, watch <i>video lessons</i>, and connect with
+            <i> experienced students</i> for live study sessions.
+          </p>
+          <div class="buttons" id="buttons">
+            <button class="btn" onclick="navigate('courses.html')">
+              Explore Courses
+            </button>
+
+            <button class="btn" onclick="navigate('meetings.html')">
+              Join a meeting
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="start">
+      <h1>Getting Started?</h1>
+      <h3>Log in → Choose Course → Start Learning</h3>
+      <div class="cardsrowh">
+        <div class="card" onclick="navigate('courses.html')">
+          <img src="/assets/top-rated.jpg" alt="Top-Rated Courses" />
+          <h2>Top-Rated Courses</h2>
+          <p>Explore the best courses to ace your exams!</p>
+        </div>
+        <div class="card" onclick="navigate('meetings.html')">
+          <img src="/assets/meetings.png" alt="Join Meetings" />
+          <h2>Join Meetings</h2>
+          <p>Connect with an experienced student!</p>
+        </div>
+      </div>
+    </div>
+    <script>
+      // Check if user is logged in
+      const token = localStorage.getItem("token");
+      if (!token) {
+        window.location.href = "/"; // Redirect if no token
+      }
+
+      // Logout function
+      document.getElementById("logout").addEventListener("click", function () {
+        localStorage.removeItem("token");
+        window.location.href = "index.html"; // Redirect to login page
+      });
+
+      function navigate(url) {
+        window.location.href = url;
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("buttons").classList.add("slide-in");
+      });
+    </script>
+  </body>
+</html>

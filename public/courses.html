@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="courses.css" />
+  </head>
+  <body>
+    <nav className="navbar">
+      <h1>StudyStream</h1>
+      <div className="pages">
+        <button class="navbtn" onclick="navigate('home.html')">Home</button>
+        <button class="navbtn" onclick="navigate('courses.html')">
+          Courses
+        </button>
+        <button class="navbtn" onclick="navigate('meetings.html')">
+          Meetings
+        </button>
+        <button id="logout" class="navbtn">Logout</button>
+      </div>
+    </nav>
+
+    <div class="main">
+      <h2>Explore notes and Video lectures of the course you want!</h2>
+
+      <input
+        type="text"
+        id="search"
+        placeholder="   Search courses..."
+        onkeyup="filterCourses()"
+      />
+
+      <div class="courses-main">
+        <div class="courses-container" id="courses-container"></div>
+      </div>
+    </div>
+
+    <button class="addcourse">Add Course</button>
+
+    <script>
+      // Sample course data
+      // Sample course data including YouTube video URL
+      let courses = [];
+      //fetch courses from the database
+      const fetchData = async () => {
+        try {
+          const response = await fetch("/api/getcourses");
+          courses = await response.json();
+          console.log(courses);
+          displayCourses(courses);
+        } catch (error) {
+          console.error("error fetching courses", error);
+        }
+      };
+
+      fetchData();
+      // Function to create course cards dynamically
+      function displayCourses(coursesList) {
+        const container = document.getElementById("courses-container");
+        container.innerHTML = ""; // Clear previous content
+
+        if (coursesList.length === 0) {
+          container.innerHTML = "<p>No courses found.</p>";
+          return;
+        }
+
+        coursesList.forEach((course) => {
+          // Use fallback values for name and description if they are null
+          const name = course.name || "Unnamed Course";
+          const description = course.description || "No description available."; // Fallback to a default text if null
+
+          const courseCard = document.createElement("div");
+          courseCard.classList.add("course-card");
+          courseCard.innerHTML = `
+      <h3 class="course-title">${name}</h3>
+      <p class="course-description">${description}</p>
+      <a href="${course.link}" class="course-link" target="_blank">See more</a>
+    `;
+
+          container.appendChild(courseCard);
+        });
+      }
+
+      const button = document.querySelector(".addcourse");
+      // prepei na pernaei kodikos apo to back end mono gia emena
+      if (true) {
+        button.style.visibility = "visible";
+        button.addEventListener("click", () => {
+          window.location.href = "addCourse.html";
+        });
+      }
+
+      // Function to filter courses based on search input
+      function filterCourses() {
+        const searchQuery = document
+          .getElementById("search")
+          .value.toLowerCase();
+        const filteredCourses = courses.filter(
+          (course) =>
+            course.name.toLowerCase().includes(searchQuery) || // Changed title -> name
+            course.description.toLowerCase().includes(searchQuery)
+        );
+        displayCourses(filteredCourses);
+      }
+
+      // Navigate function for page navigation (assuming it changes location)
+      function navigate(page) {
+        window.location.href = page;
+      }
+
+      const token = localStorage.getItem("token");
+      if (!token) {
+        window.location.href = "/"; // Redirect if no token
+      }
+
+      // Logout function
+      document.getElementById("logout").addEventListener("click", function () {
+        localStorage.removeItem("token");
+        window.location.href = "index.html"; // Redirect to login page
+      });
+
+      function navigate(url) {
+        window.location.href = url;
+      }
+    </script>
+  </body>
+</html>

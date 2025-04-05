@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="meetings.css" />
+  </head>
+  <body>
+    <div class="main">
+      <h2>Explore notes and Video lectures of the course you want!</h2>
+
+      <div class="courses-main">
+        <div class="filter-box">
+          <h1>Filters</h1>
+        </div>
+        <div class="courses-container" id="courses-container">
+          <!-- Courses will be inserted here dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const coursesData = [
+        {
+          id: 1,
+          image: "course1.jpg",
+          title: "Course 1",
+          description: "Learn Course 1",
+          link: "#",
+        },
+        {
+          id: 2,
+          image: "course2.jpg",
+          title: "Course 2",
+          description: "Learn Course 2",
+          link: "#",
+        },
+        {
+          id: 3,
+          image: "course3.jpg",
+          title: "Course 3",
+          description: "Learn Course 3",
+          link: "#",
+        },
+      ];
+
+      function createCourseCard(course) {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const img = document.createElement("img");
+        img.src = course.image;
+        img.alt = course.title;
+
+        const title = document.createElement("h3");
+        title.textContent = course.title;
+
+        const desc = document.createElement("p");
+        desc.textContent = course.description;
+
+        const link = document.createElement("a");
+        link.href = course.link;
+        link.textContent = "View Course";
+
+        card.appendChild(img);
+        card.appendChild(title);
+        card.appendChild(desc);
+        card.appendChild(link);
+
+        return card;
+      }
+
+      const coursesContainer = document.getElementById("courses-container");
+      coursesData.forEach((course) => {
+        coursesContainer.appendChild(createCourseCard(course));
+      });
+    </script>
+  </body>
+</html>
