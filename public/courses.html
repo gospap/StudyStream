@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Courses</title>
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="courses.css" />
   </head>
@@ -45,6 +45,7 @@
     </div>
 
     <button class="addcourse">Add Course</button>
+    <button id="addcourse">DeleteCourse</button>
 
     <script>
       // Sample course data
@@ -114,9 +115,14 @@
 
       const decodedToken = JSON.parse(atob(token.split(".")[1])); // Decode the JWT token to get the user info
       const button = document.querySelector(".addcourse");
+      const deleteButton = document.getElementById("addcourse");
       // prepei na pernaei kodikos apo to back end mono gia emena
       if (decodedToken.username === "gospap") {
         button.style.visibility = "visible";
+        deleteButton.style.visibility = "visible";
+        deleteButton.addEventListener("click", () => {
+          window.location.href = "deleteCourse.html";
+        });
         button.addEventListener("click", () => {
           window.location.href = "addCourse.html";
         });

@@ -108,6 +108,33 @@ app.post("/api/course", (req, res) => {
   }
 });
 
+app.post("/api/deletecourse", (req, res) => {
+  const { course_id } = req.body;
+
+  console.log("Received course_id:", course_id); // Log the received course_id
+
+  // Check if the course exists
+  const course = db
+    .prepare(`SELECT * FROM courses WHERE course_id=?`)
+    .get(course_id);
+
+  if (!course) {
+    return res.status(404).json({ message: "Course not found" });
+  }
+
+  console.log("Course found:", course); // Log the course to confirm it exists
+
+  // Proceed with deleting the course
+  try {
+    const deleteCourse = db.prepare(`DELETE FROM courses WHERE course_id=?`);
+    deleteCourse.run(course_id);
+    res.status(200).json({ message: "Course deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting course:", err); // Log the error
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 // Get all courses endpoint
 app.get("/api/getcourses", (req, res) => {
   try {

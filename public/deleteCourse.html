@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="deleteCourse.css" />
+    <link rel="stylesheet" href="app.css" />
+  </head>
+  <body>
+    <br /><br /><br /><br /><br /><br />
+    <h1>Delete a Course</h1>
+    <form id="deleteCourseForm">
+      <label for="course_id">Course ID: </label>
+      <input
+        type="text"
+        id="course_id"
+        placeholder="Enter Course ID"
+        required
+      /><br />
+      <button type="submit">Delete Course</button>
+    </form>
+
+    <div id="response"></div>
+    <script>
+      const deleteCourseForm = document.getElementById("deleteCourseForm");
+      const responseDiv = document.getElementById("response");
+
+      // Handle the form submission
+      deleteCourseForm.addEventListener("submit", async (e) => {
+        e.preventDefault(); // Prevent the form from reloading the page
+
+        const courseId = document.getElementById("course_id").value.trim();
+
+        // Check if the course ID is provided
+        if (!courseId) {
+          responseDiv.textContent = "Please enter a valid course ID.";
+          return;
+        }
+
+        // Make the fetch request to delete the course
+        try {
+          const response = await fetch("/api/deletecourse", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ course_id: courseId }),
+          });
+
+          // Handle the server response
+          const result = await response.json();
+
+          if (response.ok) {
+            responseDiv.textContent = `Success: ${result.message}`;
+          } else {
+            responseDiv.textContent = `Error: ${result.message}`;
+          }
+        } catch (error) {
+          responseDiv.textContent = "Error: Unable to delete the course.";
+          console.error("Error:", error);
+        }
+      });
+    </script>
+  </body>
+</html>

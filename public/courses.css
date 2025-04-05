@@ -74,7 +74,8 @@ nav {
   border-radius: 15px;
 }
 
-.addcourse {
+.addcourse,
+#addcourse {
   width: 100px;
   height: 50px;
   font-family: "Times New Roman", Times, serif;
@@ -89,7 +90,12 @@ nav {
   visibility: hidden;
 }
 
-.addcourse:hover {
+#addcourse {
+  margin-right: 150px;
+}
+
+.addcourse:hover,
+#addcourse:hover {
   background-color: #853ec3;
   transition: all ease 0.4s;
   transform: scale(1.02);
