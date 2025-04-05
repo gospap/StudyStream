@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
-    <title>Back end App</title>
+    <title>StudyStream</title>
   </head>
   <body style="display: flex; flex-direction: column">
     <div class="name">StudyStream</div>
@@ -14,7 +14,7 @@
         <h2>Login</h2>
         <form id="login">
           <input
-            type="username"
+            type="text"
             id="login-username"
             placeholder="Username"
             required
@@ -40,7 +40,7 @@
           <input
             type="text"
             id="signup-username"
-            placeholder="username"
+            placeholder="Username"
             required
           />
           <input
@@ -64,6 +64,7 @@
         document.getElementById("signup-form").classList.toggle("hidden");
       }
 
+      // LOGIN
       document
         .getElementById("login")
         .addEventListener("submit", async function (event) {
@@ -71,25 +72,28 @@
           const username = document.getElementById("login-username").value;
           const password = document.getElementById("login-password").value;
 
-          const response = await fetch("/api/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, password }),
-          });
+          try {
+            const response = await fetch("/api/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ username, password }),
+            });
 
-          const data = await response.json();
-          console.log(data.token);
+            const data = await response.json();
 
-          if (response.ok) {
-            localStorage.setItem("token", data.token);
-            // get the user to the homepage
-            window.location.href = "home.html";
-          } else {
-            alert(data.message);
+            if (response.ok) {
+              localStorage.setItem("token", data.token);
+              window.location.href = "home.html";
+            } else {
+              alert(data.message || "Login failed");
+            }
+          } catch (error) {
+            alert("Network error during login.");
+            console.error(error);
           }
         });
 
-      // Handle Signup Form Submission
+      // SIGNUP
       document
         .getElementById("signup")
         .addEventListener("submit", async function (event) {
@@ -97,14 +101,25 @@
           const username = document.getElementById("signup-username").value;
           const password = document.getElementById("signup-password").value;
 
-          const response = await fetch("/api/signup", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, password }),
-          });
+          try {
+            const response = await fetch("/api/signup", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ username, password }),
+            });
 
-          const result = await response.json();
-          alert(result.message);
+            const result = await response.json();
+
+            if (response.ok) {
+              alert("Signup successful! You can now log in.");
+              toggleForm();
+            } else {
+              alert(result.message || "Signup failed.");
+            }
+          } catch (error) {
+            alert("Network error during signup.");
+            console.error(error);
+          }
         });
     </script>
   </body>

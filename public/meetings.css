@@ -1,0 +1,121 @@
+/* Container for meeting rooms */
+.meetingsRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin-top: 80px; /* Adjust for the fixed navbar */
+  gap: 30px;
+}
+
+#jitsi-meet-container-1,
+#jitsi-meet-container-2,
+#jitsi-meet-container-3,
+#jitsi-meet-container-4,
+#jitsi-meet-container-5 {
+  width: 20%;
+  max-width: 650px;
+  height: 400px;
+  background-color: #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-out;
+  display: flex;
+  justify-content: center;
+  color: white;
+  font-size: 30px;
+  font-weight: bold;
+  background-size: cover;
+  background-position: center;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+}
+#jitsi-meet-container-1 {
+  background-image: url("./assets/room1.png");
+}
+
+#jitsi-meet-container-2 {
+  background-image: url("./assets/room2.jpg");
+}
+
+#jitsi-meet-container-3 {
+  background-image: url("./assets/room3.png");
+}
+
+#jitsi-meet-container-4 {
+  background-image: url("./assets/room4.png");
+}
+
+#jitsi-meet-container-5 {
+  background-image: url("./assets/room5.png");
+}
+
+#jitsi-meet-container-1:hover,
+#jitsi-meet-container-2:hover,
+#jitsi-meet-container-3:hover,
+#jitsi-meet-container-4:hover,
+#jitsi-meet-container-5:hover {
+  transform: scale(1.05);
+}
+
+/* Buttons for joining meetings */
+#buttons {
+  text-align: center;
+  margin-top: 10px;
+}
+
+#buttons a {
+  display: inline-block;
+  padding: 12px 30px;
+  background-color: #3f51b5;
+  color: white;
+  font-size: 1.1rem;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-top: 10px;
+  opacity: 0;
+  animation: fadeIn 1s ease-out 0.5s forwards;
+}
+
+#buttons a:hover {
+  background-color: #3949ab;
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Slide In Animation for buttons */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.slide-in {
+  animation: slideIn 0.8s ease-out forwards;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .meetingsRow {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #jitsi-meet-container-1,
+  #jitsi-meet-container-2,
+  #jitsi-meet-container-3,
+  #jitsi-meet-container-4,
+  #jitsi-meet-container-5 {
+    width: 90%;
+    max-width: 500px;
+  }
+}

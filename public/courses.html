@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="courses.css" />
   </head>
   <body>
-    <nav className="navbar">
+    <nav class="navbar">
       <h1>StudyStream</h1>
-      <div className="pages">
+      <div class="pages">
         <button class="navbtn" onclick="navigate('home.html')">Home</button>
         <button class="navbtn" onclick="navigate('courses.html')">
           Courses
@@ -31,6 +31,13 @@
         placeholder="   Search courses..."
         onkeyup="filterCourses()"
       />
+      <br /><br />
+      <a
+        href="https://buymeacoffee.com/gospap"
+        style="color: rgb(173, 76, 237)"
+        target="_blank"
+        >You like my work? Buy me a coffee :)</a
+      >
 
       <div class="courses-main">
         <div class="courses-container" id="courses-container"></div>
@@ -48,7 +55,6 @@
         try {
           const response = await fetch("/api/getcourses");
           courses = await response.json();
-          console.log(courses);
           displayCourses(courses);
         } catch (error) {
           console.error("error fetching courses", error);
@@ -74,21 +80,12 @@
           const courseCard = document.createElement("div");
           courseCard.classList.add("course-card");
           courseCard.innerHTML = `
-      <h3 class="course-title">${name}</h3>
-      <p class="course-description">${description}</p>
-      <a href="${course.link}" class="course-link" target="_blank">See more</a>
-    `;
+        <h3 class="course-title">${name}</h3>
+        <p class="course-description">${description}</p>
+        <a href="${course.link}" class="course-link" target="_blank">See more</a>
+      `;
 
           container.appendChild(courseCard);
-        });
-      }
-
-      const button = document.querySelector(".addcourse");
-      // prepei na pernaei kodikos apo to back end mono gia emena
-      if (true) {
-        button.style.visibility = "visible";
-        button.addEventListener("click", () => {
-          window.location.href = "addCourse.html";
         });
       }
 
@@ -113,6 +110,16 @@
       const token = localStorage.getItem("token");
       if (!token) {
         window.location.href = "/"; // Redirect if no token
+      }
+
+      const decodedToken = JSON.parse(atob(token.split(".")[1])); // Decode the JWT token to get the user info
+      const button = document.querySelector(".addcourse");
+      // prepei na pernaei kodikos apo to back end mono gia emena
+      if (decodedToken.username === "gospap") {
+        button.style.visibility = "visible";
+        button.addEventListener("click", () => {
+          window.location.href = "addCourse.html";
+        });
       }
 
       // Logout function

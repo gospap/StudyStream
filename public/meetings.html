@@ -8,74 +8,148 @@
     <link rel="stylesheet" href="meetings.css" />
   </head>
   <body>
-    <div class="main">
-      <h2>Explore notes and Video lectures of the course you want!</h2>
-
-      <div class="courses-main">
-        <div class="filter-box">
-          <h1>Filters</h1>
+    <nav class="navbar">
+      <h1>StudyStream</h1>
+      <div className="pages">
+        <button class="navbtn" onclick="navigate('home.html')">Home</button>
+        <button class="navbtn" onclick="navigate('courses.html')">
+          Courses
+        </button>
+        <button class="navbtn" onclick="navigate('meetings.html')">
+          Meetings
+        </button>
+      </div>
+    </nav>
+    <br /><br /><br />
+    <h1 style="text-align: center">Join or Host a Meeting!</h1>
+    <div class="meetingsRow">
+      <!-- Ενότητες για κάθε meeting -->
+      <div id="jitsi-meet-container-1">
+        <div id="buttons">
+          <a href="https://meet.jit.si/Room1" target="_blank">Join Meeting 1</a>
         </div>
-        <div class="courses-container" id="courses-container">
-          <!-- Courses will be inserted here dynamically -->
+      </div>
+
+      <div id="jitsi-meet-container-2">
+        <div id="buttons">
+          <a href="https://meet.jit.si/Room2" target="_blank">Join Meeting 2</a>
+        </div>
+      </div>
+
+      <div id="jitsi-meet-container-3">
+        <div id="buttons">
+          <a href="https://meet.jit.si/Room3" target="_blank">Join Meeting 3</a>
+        </div>
+      </div>
+
+      <div id="jitsi-meet-container-4">
+        <div id="buttons">
+          <a href="https://meet.jit.si/Room4" target="_blank">Join Meeting 4</a>
+        </div>
+      </div>
+
+      <div id="jitsi-meet-container-5">
+        <div id="buttons">
+          <a href="https://meet.jit.si/Room5" target="_blank">Join Meeting 5</a>
         </div>
       </div>
     </div>
 
     <script>
-      const coursesData = [
-        {
-          id: 1,
-          image: "course1.jpg",
-          title: "Course 1",
-          description: "Learn Course 1",
-          link: "#",
+      const domain = "meet.jit.si"; // Μπορείς να χρησιμοποιήσεις το δικό σου Jitsi server αν έχεις
+
+      // Ρυθμίσεις για το πρώτο meeting
+      const options1 = {
+        roomName: "Room1", // Δωμάτιο 1
+        width: "100%",
+        height: "600px",
+        parentNode: document.querySelector("#jitsi-meet-container-1"),
+        configOverwrite: {
+          startWithAudioMuted: true,
+          startWithVideoMuted: false,
         },
-        {
-          id: 2,
-          image: "course2.jpg",
-          title: "Course 2",
-          description: "Learn Course 2",
-          link: "#",
+        interfaceConfigOverwrite: {
+          filmStripOnly: false,
         },
-        {
-          id: 3,
-          image: "course3.jpg",
-          title: "Course 3",
-          description: "Learn Course 3",
-          link: "#",
+      };
+      new JitsiMeetExternalAPI(domain, options1);
+
+      // Ρυθμίσεις για το δεύτερο meeting
+      const options2 = {
+        roomName: "Room2", // Δωμάτιο 2
+        width: "100%",
+        height: "600px",
+        parentNode: document.querySelector("#jitsi-meet-container-2"),
+        configOverwrite: {
+          startWithAudioMuted: true,
+          startWithVideoMuted: false,
         },
-      ];
+        interfaceConfigOverwrite: {
+          filmStripOnly: false,
+        },
+      };
+      new JitsiMeetExternalAPI(domain, options2);
 
-      function createCourseCard(course) {
-        const card = document.createElement("div");
-        card.className = "card";
+      // Ρυθμίσεις για το τρίτο meeting
+      const options3 = {
+        roomName: "Room3", // Δωμάτιο 3
+        width: "100%",
+        height: "600px",
+        parentNode: document.querySelector("#jitsi-meet-container-3"),
+        configOverwrite: {
+          startWithAudioMuted: true,
+          startWithVideoMuted: false,
+        },
+        interfaceConfigOverwrite: {
+          filmStripOnly: false,
+        },
+      };
+      new JitsiMeetExternalAPI(domain, options3);
 
-        const img = document.createElement("img");
-        img.src = course.image;
-        img.alt = course.title;
+      // Ρυθμίσεις για το τέταρτο meeting
+      const options4 = {
+        roomName: "Room4", // Δωμάτιο 4
+        width: "100%",
+        height: "600px",
+        parentNode: document.querySelector("#jitsi-meet-container-4"),
+        configOverwrite: {
+          startWithAudioMuted: true,
+          startWithVideoMuted: false,
+        },
+        interfaceConfigOverwrite: {
+          filmStripOnly: false,
+        },
+      };
+      new JitsiMeetExternalAPI(domain, options4);
 
-        const title = document.createElement("h3");
-        title.textContent = course.title;
+      // Ρυθμίσεις για το πέμπτο meeting
+      const options5 = {
+        roomName: "Room5", // Δωμάτιο 5
+        width: "100%",
+        height: "600px",
+        parentNode: document.querySelector("#jitsi-meet-container-5"),
+        configOverwrite: {
+          startWithAudioMuted: true,
+          startWithVideoMuted: false,
+        },
+        interfaceConfigOverwrite: {
+          filmStripOnly: false,
+        },
+      };
+      new JitsiMeetExternalAPI(domain, options5);
 
-        const desc = document.createElement("p");
-        desc.textContent = course.description;
-
-        const link = document.createElement("a");
-        link.href = course.link;
-        link.textContent = "View Course";
-
-        card.appendChild(img);
-        card.appendChild(title);
-        card.appendChild(desc);
-        card.appendChild(link);
-
-        return card;
+      function navigate(page) {
+        window.location.href = page;
       }
 
-      const coursesContainer = document.getElementById("courses-container");
-      coursesData.forEach((course) => {
-        coursesContainer.appendChild(createCourseCard(course));
-      });
+      const token = localStorage.getItem("token");
+      if (!token) {
+        window.location.href = "/"; // Redirect if no token
+      }
+
+      function navigate(url) {
+        window.location.href = url;
+      }
     </script>
   </body>
 </html>

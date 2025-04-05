@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="app.css" />
   </head>
   <body>
-    <nav className="navbar">
+    <nav class="navbar">
       <h1>StudyStream</h1>
-      <div className="pages">
+      <div class="pages">
         <button class="navbtn" onclick="navigate('home.html')">Home</button>
         <button class="navbtn" onclick="navigate('courses.html')">
           Courses
@@ -69,7 +69,8 @@
       // Logout function
       document.getElementById("logout").addEventListener("click", function () {
         localStorage.removeItem("token");
-        window.location.href = "index.html"; // Redirect to login page
+
+        window.location.href = "/index.html"; // Redirect to login page
       });
 
       function navigate(url) {

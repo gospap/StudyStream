@@ -3,13 +3,11 @@ import { fileURLToPath } from "url";
 import path, { dirname } from "path";
 import db from "./db.js";
 import bcrypt from "bcryptjs";
-const app = express();
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
 dotenv.config();
-app.use(express.json());
-const PORT = 4000;
+const app = express();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -17,29 +15,28 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 app.use(express.static(path.join(__dirname, "../public")));
+app.use(express.json()); // Parse incoming JSON requests
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
+const PORT = 4000;
 
-//post endpoint for logging in a user | get the fields from the front end make a token make sure it matches and then go to next() after verification
+// Login endpoint
 app.post("/api/login", async (req, res) => {
   try {
     const { username, password } = req.body;
     if (!username || !password) {
       return res
-        .status(404)
-        .json({ message: "password or username is missing" });
+        .status(400)
+        .json({ message: "Username or password is missing" });
     }
 
     const searchUsername = db
       .prepare(`SELECT * FROM users WHERE username = ?`)
       .get(username);
     if (!searchUsername) {
-      return res.status(404).json({ message: "user not found" });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // Await the bcrypt comparison
+    // Verify password using bcrypt
     const isPasswordValid = await bcrypt.compare(
       password,
       searchUsername.password
@@ -48,72 +45,70 @@ app.post("/api/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // create the token and return it
+    // Create JWT token and send it back
     const token = jwt.sign(
       { id: searchUsername.id, username: searchUsername.username },
       JWT_SECRET,
       { expiresIn: "24h" }
     );
-    res.json({ token }); // return it
-
-    // as soon as the user has logged in then he/she can navigate through the app
+    res.json({ token });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: "Internal server error" });
   }
 });
 
-//post endpoint for creating a user | get the req body and destructure it hash the password and enter at db
-app.post("/api/signup", (req, res) => {
+// Signup endpoint
+app.post("/api/signup", async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // check if its an existing user
     const check = db
       .prepare(`SELECT * FROM users WHERE username = ?`)
       .get(username);
     if (check) {
-      // the user already exists
-      res.status(409).json({ message: "user already exists" });
+      return res.status(409).json({ message: "User already exists" });
     }
 
-    // hash the password
-    const hashedPassword = bcrypt.hashSync(password, 8);
-    //insert user to the table users
+    // Hash password asynchronously
+    const hashedPassword = await bcrypt.hash(password, 10);
     const insertion = db.prepare(
-      `INSERT INTO users (username,password) VALUES (?,?)`
+      `INSERT INTO users (username, password) VALUES (?, ?)`
     );
     insertion.run(username, hashedPassword);
-    res.sendStatus(201);
+
+    res.status(201).json({ message: "User created successfully" });
   } catch (error) {
     console.log(error.message);
-    res.sendStatus(500); // error in backend
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
-// add a course
+// Add course endpoint (only accessible to authenticated users)
 app.post("/api/course", (req, res) => {
+  const { course_id, name, description, link } = req.body;
+
+  // Check if course already exists
+  const exists = db
+    .prepare(`SELECT * FROM courses WHERE course_id=?`)
+    .get(course_id);
+  if (exists) {
+    return res.status(400).json({ message: "Course already exists" });
+  }
+
+  // Insert new course
   try {
-    const { course_id, name, description, link } = req.body;
-    //check if it already exists in the db
-    const exists = db
-      .prepare(`SELECT * FROM courses WHERE course_id=?`)
-      .get(course_id);
-
-    if (exists) {
-      res.status(404).json({ message: "already exists" });
-    }
-
-    //insert it into the database
-    const insertCourse = db.prepare(`INSERT INTO courses VALUES (?,?,?,?)`);
+    const insertCourse = db.prepare(
+      `INSERT INTO courses (course_id, name, description, link) VALUES (?, ?, ?, ?)`
+    );
     insertCourse.run(course_id, name, description, link);
-    res.sendStatus(201);
+    res.status(201).json({ message: "Course added successfully" });
   } catch (err) {
-    res.status(503).json("internal server error");
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
-// return to front end all courses
+// Get all courses endpoint
 app.get("/api/getcourses", (req, res) => {
   try {
     const courses = db.prepare(`SELECT * FROM courses`).all();
@@ -125,5 +120,5 @@ app.get("/api/getcourses", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`server is running -> http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
