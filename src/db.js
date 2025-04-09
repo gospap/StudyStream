@@ -1,20 +1,31 @@
-import Database from "better-sqlite3";
+import pkg from "pg";
+const { Pool } = pkg;
 
-// Δημιουργία ή άνοιγμα μόνιμης βάσης
-const db = new Database("./database.sqlite");
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
+});
 
-// Δημιουργία πινάκων αν δεν υπάρχουν
-db.exec(`CREATE TABLE IF NOT EXISTS users (                   
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT UNIQUE,
-    password TEXT
-)`);
+// Εκτελείται αμέσως και δημιουργεί πίνακες
+(async () => {
+  try {
+    await pool.query(`CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
+      username TEXT UNIQUE,
+      password TEXT
+    )`);
 
-db.exec(`CREATE TABLE IF NOT EXISTS courses (
-    course_id INTEGER PRIMARY KEY,
-    name TEXT UNIQUE,
-    description TEXT,
-    link TEXT UNIQUE
-)`);
+    await pool.query(`CREATE TABLE IF NOT EXISTS courses (
+      course_id SERIAL PRIMARY KEY,
+      name TEXT UNIQUE,
+      description TEXT,
+      link TEXT UNIQUE
+    )`);
+  } catch (err) {
+    console.error("Error creating tables:", err);
+  }
+})();
 
-export default db;
+export default {
+  query: (text, params) => pool.query(text, params),
+};
