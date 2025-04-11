@@ -162,9 +162,9 @@ app.get("/api/getcourses", async (req, res) => {
 
 // post endpoint for reset password
 app.post("/api/forgot-password", async (req, res) => {
-  const { username } = req.body;
-  const { rows } = await db.query(`SELECT * FROM users WHERE username = $1`, [
-    username,
+  const { email } = req.body;
+  const { rows } = await db.query(`SELECT * FROM users WHERE email = $1`, [
+    email,
   ]);
 
   const user = rows[0];
@@ -184,7 +184,7 @@ app.post("/api/forgot-password", async (req, res) => {
   const resetLink = `https://studystream-zia9.onrender.com/reset-password?token=${token}`;
 
   await sendEmail(
-    username,
+    email,
     "Reset Your Password",
     `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`
   );
