@@ -30,6 +30,10 @@
             Don't have an account?
             <a href="#" onclick="toggleForm()">Sign up</a>
           </p>
+          <p>
+            Forgot your password?
+            <a href="#" onclick="showForgotForm()">Reset it</a>
+          </p>
         </form>
       </div>
 
@@ -56,12 +60,52 @@
           </p>
         </form>
       </div>
+
+      <!-- Forgot Password Form -->
+      <div class="form-container hidden" id="forgot-form">
+        <h2>Forgot Password</h2>
+        <form id="forgot-password-form">
+          <input
+            type="text"
+            id="forgot-username"
+            placeholder="Enter your email"
+            required
+          />
+          <button type="submit">Send Reset Link</button>
+          <p><a href="#" onclick="showLoginForm()">Back to Login</a></p>
+        </form>
+      </div>
+
+      <!-- Reset Password Form (only shown with ?token=) -->
+      <div class="form-container hidden" id="reset-form">
+        <h2>Reset Password</h2>
+        <form id="reset-password-form">
+          <input
+            type="password"
+            id="new-password"
+            placeholder="New Password"
+            required
+          />
+          <button type="submit">Reset Password</button>
+        </form>
+      </div>
     </div>
 
     <script>
       function toggleForm() {
         document.getElementById("login-form").classList.toggle("hidden");
         document.getElementById("signup-form").classList.toggle("hidden");
+      }
+
+      function showForgotForm() {
+        document.getElementById("login-form").classList.add("hidden");
+        document.getElementById("forgot-form").classList.remove("hidden");
+      }
+
+      function showLoginForm() {
+        document.getElementById("forgot-form").classList.add("hidden");
+        document.getElementById("reset-form").classList.add("hidden");
+        document.getElementById("login-form").classList.remove("hidden");
       }
 
       // LOGIN
@@ -121,6 +165,66 @@
             console.error(error);
           }
         });
+
+      // FORGOT PASSWORD
+      document
+        .getElementById("forgot-password-form")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const username = document.getElementById("forgot-username").value;
+
+          try {
+            const res = await fetch("/api/forgot-password", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ username }),
+            });
+
+            const data = await res.json();
+            alert(data.message || "Check your email for a reset link.");
+            showLoginForm();
+          } catch (err) {
+            alert("Error sending reset email.");
+            console.error(err);
+          }
+        });
+
+      // RESET PASSWORD (if token in URL)
+      window.addEventListener("DOMContentLoaded", () => {
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get("token");
+
+        if (token) {
+          document.querySelector(".container").style.display = "none";
+          document.getElementById("reset-form").classList.remove("hidden");
+
+          document
+            .getElementById("reset-password-form")
+            .addEventListener("submit", async function (e) {
+              e.preventDefault();
+              const newPassword = document.getElementById("new-password").value;
+
+              try {
+                const res = await fetch("/api/reset-password", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ token, newPassword }),
+                });
+
+                const result = await res.json();
+                if (res.ok) {
+                  alert("Password reset successful! You can now log in.");
+                  window.location.href = "/";
+                } else {
+                  alert(result.message || "Reset failed.");
+                }
+              } catch (err) {
+                alert("Network error during reset.");
+                console.error(err);
+              }
+            });
+        }
+      });
     </script>
   </body>
 </html>

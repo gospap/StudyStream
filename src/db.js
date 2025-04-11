@@ -12,7 +12,9 @@ const pool = new Pool({
     await pool.query(`CREATE TABLE IF NOT EXISTS users (
       id SERIAL PRIMARY KEY,
       username TEXT UNIQUE,
-      password TEXT
+      password TEXT,
+      reset_token TEXT,
+      reset_token_expiry TIMESTAMP
     )`);
 
     await pool.query(`CREATE TABLE IF NOT EXISTS courses (

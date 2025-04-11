@@ -5,6 +5,8 @@ import db from "./db.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { sendEmail } from "../utils/sendEmail.js";
+import crypto from "crypto";
 
 dotenv.config();
 const app = express();
@@ -149,6 +151,59 @@ app.get("/api/getcourses", async (req, res) => {
     console.error(error.message);
     res.status(500).json({ message: "Internal server error" });
   }
+});
+
+// post endpoint for reset password
+app.post("/api/forgot-password", async (req, res) => {
+  const { username } = req.body;
+  const { rows } = await db.query(`SELECT * FROM users WHERE username = $1`, [
+    username,
+  ]);
+
+  const user = rows[0];
+  if (!user) {
+    return res.status(404).json({ message: "user not found" });
+  }
+
+  const token = crypto.randomBytes(32).toString("hex");
+  const expiry = new Date(Date.now() + 1000 * 60 * 60);
+
+  await db.query(
+    `UPDATE users SET reset_token= $1 , reset_token_expiry=$2 WHERE id=$3`,
+    [token, expiry, user.id]
+  );
+
+  //send the email
+  const resetLink = `https://studystream-zia9.onrender.com/reset-password?token=${token}`;
+
+  await sendEmail(
+    username,
+    "Reset Your Password",
+    `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`
+  );
+
+  res.json({ message: "Password reset link sent to email" });
+});
+
+app.post("/api/reset-password", async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  const { rows } = await db.query(
+    `SELECT * FROM users WHERE reset_token = $1 AND reset_token_expiry > NOW()`,
+    [token]
+  );
+
+  const user = rows[0];
+  if (!user)
+    return res.status(400).json({ message: "Invalid or expired token" });
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  await db.query(
+    `UPDATE users SET password = $1 , reset_token=NULL,reset_token_expiry=NULL WHERE id=$2`,
+    [hashedPassword, user.id]
+  );
+
+  res.json({ message: "password has been reset successfully" });
 });
 
 app.listen(PORT, () => {
