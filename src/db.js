@@ -13,6 +13,7 @@ const pool = new Pool({
       id SERIAL PRIMARY KEY,
       username TEXT UNIQUE,
       password TEXT,
+      email TEXT UNIQUE,
       reset_token TEXT,
       reset_token_expiry TIMESTAMP
     )`);

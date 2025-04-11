@@ -65,7 +65,7 @@ app.post("/api/login", async (req, res) => {
 // Signup endpoint
 app.post("/api/signup", async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, email } = req.body;
 
     const { rows } = await db.query(`SELECT * FROM users WHERE username = $1`, [
       username,
@@ -76,12 +76,19 @@ app.post("/api/signup", async (req, res) => {
       return res.status(409).json({ message: "User already exists" });
     }
 
+    const emailCheck = await db.query(`SELECT * FROM users WHERE email = $1`, [
+      email,
+    ]);
+    if (emailCheck.rows[0]) {
+      return res.status(409).json({ message: "Email already in use" });
+    }
+
     // Hash password asynchronously
     const hashedPassword = await bcrypt.hash(password, 10);
-    await db.query(`INSERT INTO users (username, password) VALUES ($1, $2)`, [
-      username,
-      hashedPassword,
-    ]);
+    await db.query(
+      `INSERT INTO users (username, password, email) VALUES ($1, $2, $3)`,
+      [username, hashedPassword, email] // Insert the email as well
+    );
 
     res.status(201).json({ message: "User created successfully" });
   } catch (error) {
