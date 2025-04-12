@@ -209,6 +209,7 @@
 
             if (res.ok) {
               // If token is valid, show the reset password form
+              window.location.href = "/";
               document.querySelector(".container").style.display = "none";
               document.getElementById("reset-form").classList.remove("hidden");
 
