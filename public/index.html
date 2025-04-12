@@ -93,16 +93,19 @@
     </div>
 
     <script>
+      // Function to toggle between forms
       function toggleForm() {
         document.getElementById("login-form").classList.toggle("hidden");
         document.getElementById("signup-form").classList.toggle("hidden");
       }
 
+      // Show forgot password form
       function showForgotForm() {
         document.getElementById("login-form").classList.add("hidden");
         document.getElementById("forgot-form").classList.remove("hidden");
       }
 
+      // Show login form
       function showLoginForm() {
         document.getElementById("forgot-form").classList.add("hidden");
         document.getElementById("reset-form").classList.add("hidden");
@@ -145,13 +148,13 @@
           event.preventDefault();
           const username = document.getElementById("signup-username").value;
           const password = document.getElementById("signup-password").value;
-          const email = document.getElementById("signup-email").value; // Get the email
+          const email = document.getElementById("signup-email").value;
 
           try {
             const response = await fetch("/api/signup", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ username, password, email }), // Include email in request body
+              body: JSON.stringify({ username, password, email }),
             });
 
             const result = await response.json();
@@ -192,39 +195,58 @@
         });
 
       // RESET PASSWORD (if token in URL)
-      window.addEventListener("DOMContentLoaded", () => {
+      window.addEventListener("DOMContentLoaded", async () => {
         const params = new URLSearchParams(window.location.search);
         const token = params.get("token");
 
         if (token) {
-          document.querySelector(".container").style.display = "none";
-          document.getElementById("reset-form").classList.remove("hidden");
-
-          document
-            .getElementById("reset-password-form")
-            .addEventListener("submit", async function (e) {
-              e.preventDefault();
-              const newPassword = document.getElementById("new-password").value;
-
-              try {
-                const res = await fetch("/api/reset-password", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ token, newPassword }),
-                });
-
-                const result = await res.json();
-                if (res.ok) {
-                  alert("Password reset successful! You can now log in.");
-                  window.location.href = "/";
-                } else {
-                  alert(result.message || "Reset failed.");
-                }
-              } catch (err) {
-                alert("Network error during reset.");
-                console.error(err);
-              }
+          try {
+            // Validate the token before showing the reset form
+            const res = await fetch(`/api/reset-password?token=${token}`, {
+              method: "GET",
             });
+
+            if (res.ok) {
+              // If token is valid, show the reset password form
+              document.querySelector(".container").style.display = "none";
+              document.getElementById("reset-form").classList.remove("hidden");
+
+              // Handle password reset form submission
+              document
+                .getElementById("reset-password-form")
+                .addEventListener("submit", async function (e) {
+                  e.preventDefault();
+                  const newPassword =
+                    document.getElementById("new-password").value;
+
+                  try {
+                    const resetRes = await fetch("/api/reset-password", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ token, newPassword }),
+                    });
+
+                    const result = await resetRes.json();
+                    if (resetRes.ok) {
+                      alert("Password reset successful! You can now log in.");
+                      window.location.href = "/";
+                    } else {
+                      alert(result.message || "Reset failed.");
+                    }
+                  } catch (err) {
+                    alert("Network error during reset.");
+                    console.error(err);
+                  }
+                });
+            } else {
+              // If token is invalid or expired
+              alert("Invalid or expired token.");
+              window.location.href = "/"; // Redirect to homepage or login page
+            }
+          } catch (err) {
+            alert("Error validating token.");
+            console.error(err);
+          }
         }
       });
     </script>
