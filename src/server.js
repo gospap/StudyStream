@@ -182,8 +182,6 @@ app.post("/api/forgot-password", async (req, res) => {
 
   //send the email
   const resetLink = `https://studystream-zia9.onrender.com/reset-password?token=${token}`;
-  console.log(process.env.EMAIL_USER);
-  console.log(process.env.EMAIL_PASS);
 
   await sendEmail(
     email,
