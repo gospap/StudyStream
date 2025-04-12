@@ -169,19 +169,19 @@ app.post("/api/forgot-password", async (req, res) => {
 
   const user = rows[0];
   if (!user) {
-    return res.status(404).json({ message: "user not found" });
+    return res.status(404).json({ message: "User not found" });
   }
 
   const token = crypto.randomBytes(32).toString("hex");
   const expiry = new Date(Date.now() + 1000 * 60 * 60);
 
   await db.query(
-    `UPDATE users SET reset_token= $1 , reset_token_expiry=$2 WHERE id=$3`,
+    `UPDATE users SET reset_token = $1, reset_token_expiry = $2 WHERE id = $3`,
     [token, expiry, user.id]
   );
 
-  //send the email
-  const resetLink = `https://studystream-zia9.onrender.com/api/reset-password?token=${token}`;
+  // Send the reset link in the email, now pointing to index.html
+  const resetLink = `https://studystream-zia9.onrender.com/index.html?token=${token}`;
 
   await sendEmail(
     email,
