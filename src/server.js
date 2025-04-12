@@ -214,12 +214,13 @@ app.post("/api/reset-password", async (req, res) => {
 });
 
 app.get("/api/reset-password", async (req, res) => {
-  const { token } = req.query;
+  const { token } = req.query; // Retrieve the token from the query string
 
   if (!token) {
     return res.status(400).json({ message: "Token is required." });
   }
 
+  // Query the database to check if the token is valid and not expired
   const { rows } = await db.query(
     `SELECT * FROM users WHERE reset_token = $1 AND reset_token_expiry > NOW()`,
     [token]
@@ -231,8 +232,8 @@ app.get("/api/reset-password", async (req, res) => {
     return res.status(400).json({ message: "Invalid or expired token" });
   }
 
-  // If token is valid, return a success response
-  res.json({ message: "Token is valid" });
+  // If token is valid, redirect to the reset password page
+  res.sendStatus(200);
 });
 
 app.listen(PORT, () => {
