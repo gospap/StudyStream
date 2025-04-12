@@ -233,7 +233,7 @@ app.get("/api/reset-password", async (req, res) => {
   }
 
   // If token is valid, redirect to the reset password page
-  res.sendStatus(200);
+  res.status(200);
 });
 
 app.listen(PORT, () => {
