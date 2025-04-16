@@ -207,11 +207,13 @@
             const res = await fetch(`/api/reset-password?token=${token}`, {
               method: "GET",
             });
-
+            // validate the token in th backend and return 200 or else
+            console.log(res);
             if (res.ok) {
               // If token is valid, show the reset password form
               document.querySelector(".container").style.display = "none";
               document.getElementById("reset-form").classList.remove("hidden");
+              document.getElementById("reset-form").classList.add("vis");
 
               // Handle password reset form submission
               document

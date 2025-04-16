@@ -75,6 +75,10 @@ a:hover {
   display: none;
 }
 
+.vis{
+  visibility: visible;
+}
+
 .name {
   font-size: 30px;
   margin-bottom: 50px;
